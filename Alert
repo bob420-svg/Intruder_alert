@@ -1,0 +1,25 @@
+from twilio.rest import Client
+import RPi.GPIO as GPIO
+import time
+
+# Set up Twilio client
+account_sid = 'your_account_sid'
+auth_token = 'your_auth_token'
+client = Client(account_sid, auth_token)
+
+# Set up GPIO pins for motion sensor
+GPIO.setmode(GPIO.BOARD)
+PIR_PIN = 7
+GPIO.setup(PIR_PIN, GPIO.IN)
+
+# Loop to detect motion and send message
+while True:
+    if GPIO.input(PIR_PIN):
+        print("Motion detected!")
+        message = client.messages.create(
+            body='Intruder detected!',
+            from_='your_twilio_number',
+            to='your_phone_number'
+        )
+        print(message.sid)
+        time.sleep(10)
